@@ -1,0 +1,10 @@
+tr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+td {
+  padding: 10px;
+  font-size: 14px;
+}
