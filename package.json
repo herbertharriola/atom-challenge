@@ -1,5 +1,5 @@
 {
-  "name": "atom-fe-challenge-template-ng-15",
+  "name": "atom-challenge",
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",

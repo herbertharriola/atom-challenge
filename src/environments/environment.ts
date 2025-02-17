@@ -9,5 +9,5 @@ export const environment = {
     messagingSenderId: "1013156850169",
     appId: "1:1013156850169:web:8f08fcec2ea1e07f90b528"
   },
-  firebaseFunctionsURL: "http://127.0.0.1:5001/atom-challenge-backend/us-central1/api" // URL del backend de Firebase Functions
+  firebaseFunctionsURL: "https://us-central1-atom-challenge-backend.cloudfunctions.net/api"
 };

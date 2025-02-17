@@ -15,6 +15,7 @@ app.get('/tasks', async (req, res) => {
   try {
     const snapshot = await db
       .collection('tasks')
+      .where('deleted', '==', false)
       .orderBy('createdAt', 'asc')
       .get();
 
@@ -36,9 +37,13 @@ app.get('/tasks', async (req, res) => {
 app.post('/tasks', async (req, res) => {
   try {
     const newTask = {
-      ...req.body,
+      title: req.body.title,
+      description: req.body.description || '',
+      completed: false,
       createdAt: admin.firestore.Timestamp.now(),
+      deleted: false,
     };
+
     const taskRef = await db.collection('tasks').add(newTask);
     res.json({ id: taskRef.id, ...newTask });
   } catch (error) {
@@ -54,8 +59,9 @@ app.put(
   async (req: express.Request, res: express.Response): Promise<void> => {
     try {
       const { taskId } = req.params;
-      await db.collection('tasks').doc(taskId).update(req.body);
-      res.json({ message: 'Task updated' });
+      const updateData = req.body;
+      await db.collection("tasks").doc(taskId).update(updateData);
+      res.json({ message: "Task updated", data: updateData });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
@@ -65,20 +71,19 @@ app.put(
 );
 
 // Eliminar una tarea
-app.delete(
-  '/tasks/:taskId',
-  async (req: express.Request, res: express.Response): Promise<void> => {
-    try {
+// Eliminar lógicamente una tarea (actualiza deleted: true)
+app.delete("/tasks/:taskId", async (req, res) => {
+  try {
       const { taskId } = req.params;
-      await db.collection('tasks').doc(taskId).delete();
-      res.json({ message: 'Task deleted' });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
-      res.status(500).json({ error: errorMessage });
-    }
+
+      await db.collection("tasks").doc(taskId).update({ deleted: true });
+
+      res.json({ message: "Task marked as deleted" });
+  } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
   }
-);
+});
+
 
 // Buscar usuario por email
 app.get(

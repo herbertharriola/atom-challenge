@@ -7,27 +7,46 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css']
+  styleUrls: ['./tasks.component.scss'],
 })
 export class TasksComponent implements OnInit {
-  displayedColumns: string[] = ['title', 'description', 'createdAt', 'completed', 'actions'];
+  displayedColumns: string[] = [
+    'title',
+    'description',
+    'createdAt',
+    'completed',
+    'actions',
+  ];
   dataSource = new MatTableDataSource<Task>();
-  newTask: Task = { title: '', description: '', completed: false, createdAt: new Date() };
+  newTask: Task = {
+    title: '',
+    description: '',
+    completed: false,
+    createdAt: new Date(),
+    deleted: false,
+  };
   isLoading: boolean = true;
 
-  constructor(private taskService: TaskService, private authService: AuthService) {}
+  constructor(
+    private taskService: TaskService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.loadTasks();
   }
 
   loadTasks() {
-    this.taskService.getTasks().subscribe(tasks => {
-      console.log("Tareas obtenidas:", tasks); // Verifica si Firebase devuelve datos
-      this.dataSource.data = tasks;
-      this.isLoading = false;
-    }, error => {
-      console.error("Error obteniendo tareas:", error);
+    this.isLoading = true; // 🔹 Mostrar spinner mientras carga
+    this.taskService.getTasks().subscribe({
+      next: (tasks) => {
+        this.dataSource.data = tasks.filter((task) => !task.deleted); // 🔹 No mostrar eliminados
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error cargando tareas:', error);
+    },
     });
   }
 
@@ -38,47 +57,42 @@ export class TasksComponent implements OnInit {
       title: this.newTask.title,
       description: this.newTask.description || '',
       completed: false,
-      createdAt: new Date()
+      createdAt: new Date(),
+      deleted: false,
     };
 
-    console.log("Agregando tarea:", task); // Verifica si se está enviando bien
-
     try {
-      await this.taskService.addTask(task).toPromise();
-      console.log("Tarea agregada correctamente");
-
-      // Volver a cargar tareas después de agregar
-      this.loadTasks();
-
-      // Limpiar el formulario después de agregar
-      this.newTask = { title: '', description: '', completed: false, createdAt: new Date() };
+      await this.taskService.addTask(task);
+      this.newTask = {
+        title: '',
+        description: '',
+        completed: false,
+        createdAt: new Date(),
+        deleted: false,
+      };
     } catch (error) {
-      console.error("Error agregando tarea:", error);
+      console.error('Error agregando tarea:', error);
     }
   }
 
-  updateTask(task: Task) {
+  async updateTask(task: Task) {
     if (!task.id) return;
 
-    this.taskService.updateTask(task).subscribe(() => {
-      console.log(`Tarea ${task.id} actualizada`);
-    }, error => {
-      console.error("Error actualizando tarea:", error);
-    });
+    try {
+      task.completed = !task.completed;
+      await this.taskService.updateTask(task);
+    } catch (error) {
+      console.error('Error actualizando tarea:', error);
+    }
   }
-  
 
   async deleteTask(taskId: string) {
-    if (!taskId) return; // Verifica que haya un ID válido
-  
+    if (!taskId) return;
+
     try {
-      await this.taskService.deleteTask(taskId).toPromise();
-      console.log(`Tarea con ID ${taskId} eliminada`);
-  
-      // 🔹 Actualiza la lista de tareas eliminando la tarea sin recargar desde Firebase
-      this.dataSource.data = this.dataSource.data.filter(task => task.id !== taskId);
+      await this.taskService.deleteTask(taskId);
     } catch (error) {
-      console.error("Error eliminando tarea:", error);
+      console.error('Error eliminando tarea:', error);
     }
   }
 

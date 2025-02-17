@@ -1,0 +1,72 @@
+/* Contenedor principal */
+.tasks-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Formulario responsivo */
+.task-form {
+  padding: 16px;
+}
+
+/* Estilos para inputs */
+mat-form-field {
+  width: 100%;
+}
+
+/* Estilos para card titles */
+mat-card-title {
+  padding: 16px; 
+  display: block;
+  font-size: 1.2rem; 
+  font-weight: bold;
+}
+
+/* Botón de agregar centrado */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* Lista de tareas */
+.task-list {
+  overflow-x: auto;
+  padding: 16px;
+}
+
+/* Tabla responsiva */
+table {
+  width: 100%;
+  min-width: 600px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.logout-button {
+  margin-left: auto;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .tasks-container {
+    padding: 8px;
+  }
+
+  .task-form, .task-list {
+    padding: 8px;
+  }
+
+  .form-actions {
+    justify-content: center;
+  }
+}

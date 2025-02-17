@@ -1,52 +1,43 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, collectionData } from '@angular/fire/firestore';
+import { map, Observable } from 'rxjs';
 import { Task } from '../models/task.model';
-import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = `${environment.apiUrl}/tasks`;
+  private tasksCollection = collection(this.firestore, 'tasks');
 
-  constructor(private http: HttpClient) {}
+  constructor(private firestore: Firestore) {}
 
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl).pipe(
-      tap(tasks => console.log("Datos recibidos de Firebase:", tasks)), 
-      map(tasks => tasks.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())),
-      catchError(error => {
-        console.error("Error en la solicitud HTTP:", error);
-        return of([]); // Retorna un array vacío para evitar errores
-      })
-    );
+    return collectionData(this.tasksCollection, { idField: 'id' }).pipe(
+      map((tasks: any[]) =>
+        tasks
+          .map((task) => ({
+            ...task,
+            createdAt: task.createdAt?.seconds
+              ? new Date(task.createdAt.seconds * 1000)
+              : task.createdAt,
+          }))
+          .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      )
+    ) as Observable<Task[]>;
+  }
+  
+
+  addTask(task: Task): Promise<void> {
+    return addDoc(this.tasksCollection, task).then(() => {});
   }
 
-  addTask(task: Task): Observable<Task> {
-    return this.http.post<Task>(this.apiUrl, task).pipe(
-      catchError(error => {
-        console.error("Error agregando tarea:", error);
-        return of(null as any);
-      })
-    );
+  updateTask(task: Task): Promise<void> {
+    const taskDoc = doc(this.firestore, `tasks/${task.id}`);
+    return updateDoc(taskDoc, { completed: task.completed });
   }
 
-  updateTask(task: Task): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${task.id}`, task).pipe(
-      catchError(error => {
-        console.error("Error actualizando tarea:", error);
-        return of();
-      })
-    );
-  }
-
-  deleteTask(taskId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${taskId}`).pipe(
-      catchError(error => {
-        console.error("Error eliminando tarea:", error);
-        return of();
-      })
-    );
+  deleteTask(taskId: string): Promise<void> {
+    const taskDoc = doc(this.firestore, `tasks/${taskId}`);
+    return updateDoc(taskDoc, { deleted: true });
   }
 }

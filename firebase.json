@@ -1,19 +1,4 @@
 {
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log"
-      ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
-    }
-  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -23,9 +8,11 @@
       "port": 9099
     },
     "functions": {
+      "host": "127.0.0.1",
       "port": 5001
     },
     "firestore": {
+      "host": "127.0.0.1",
       "port": 8080
     },
     "database": {
@@ -35,5 +22,19 @@
       "enabled": true
     },
     "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "dist/atom-challenge",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
