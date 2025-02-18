@@ -33,7 +33,11 @@ export class TaskService {
 
   updateTask(task: Task): Promise<void> {
     const taskDoc = doc(this.firestore, `tasks/${task.id}`);
-    return updateDoc(taskDoc, { completed: task.completed });
+    return updateDoc(taskDoc, {
+      completed: task.completed,
+      title: task.title,
+      description: task.description,
+    });
   }
 
   deleteTask(taskId: string): Promise<void> {

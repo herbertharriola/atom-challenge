@@ -1,72 +1,168 @@
-/* Contenedor principal */
 .tasks-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 16px;
+  background-color: #dddddd; // Color de fondo del módulo
+  padding-top: 64px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-/* Formulario responsivo */
-.task-form {
-  padding: 16px;
-}
-
-/* Estilos para inputs */
-mat-form-field {
-  width: 100%;
-}
-
-/* Estilos para card titles */
-mat-card-title {
-  padding: 16px; 
-  display: block;
-  font-size: 1.2rem; 
-  font-weight: bold;
-}
-
-/* Botón de agregar centrado */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-
-/* Lista de tareas */
-.task-list {
-  overflow-x: auto;
-  padding: 16px;
-}
-
-/* Tabla responsiva */
-table {
-  width: 100%;
-  min-width: 600px;
-}
-
-.toolbar {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 16px;
-}
+  width: 100%;
+  overflow-x: hidden;
 
-.logout-button {
-  margin-left: auto;
-}
-
-/* Responsive para pantallas pequeñas */
-@media (max-width: 768px) {
-  .tasks-container {
-    padding: 8px;
+  .tasks-content {
+    width: 100%;
+    max-width: 900px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-sizing: border-box;
   }
 
-  .task-form, .task-list {
-    padding: 8px;
+  .task-form,
+  .task-list {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  
+    mat-card-title {
+      font-size: 20px;
+      font-weight: bold;
+      padding-bottom: 16px;
+    }
+  
+    .task-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  
+      th {
+        background: #dddddd;
+        text-align: left;
+        padding: 12px;
+        font-weight: bold;
+        border-bottom: 2px solid #ddd;
+      }
+  
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      tr:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+  
+      mat-checkbox {
+        display: flex;
+        justify-content: center;
+      }
+  
+      mat-icon {
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+  
+      mat-icon:hover {
+        color: #d32f2f;
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .empty-message {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
   }
 
   .form-actions {
+    display: flex;
     justify-content: center;
+    margin-top: 16px;
+    gap: 16px;
+  }
+
+  mat-toolbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  /* Estilos para inputs */
+  mat-form-field {
+    width: 100%;
+  }
+
+  /* Estilos para card titles */
+  mat-card-title {
+    padding: 16px;
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+.table-responsive {
+  overflow-x: auto; // 🔹 Permite que la tabla haga scroll en móviles si es necesario
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  min-width: 600px; // 🔹 Evita que las celdas se colapsen demasiado
+}
+
+mat-card, mat-toolbar {
+  min-width: unset !important; // 🔹 Evita que se expandan demasiado en pantallas pequeñas
+  width: 100%;
+}
+
+mat-toolbar {
+  position: fixed;  // 🔹 Fija el toolbar en la parte superior
+  top: 0;           // 🔹 Se mantiene en la parte superior
+  left: 0;
+  width: 100%;      // 🔹 Ocupar todo el ancho de la pantalla
+  z-index: 1000;    // 🔹 Asegura que quede sobre otros elementos
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); // 🔹 Agrega una sombra ligera
+}
+
+@media (max-width: 768px) {
+  .tasks-container {
+    padding: 0px;
+    padding-top: 52px;
+  }
+
+  .task-form, 
+  .task-list {
+    max-width: 100%;
+    padding: 12px;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  table {
+    font-size: 14px; // 🔹 Reduce el tamaño de fuente en móviles
+  }
+
+  .form-actions {
+    flex-direction: column; // 🔹 Pone los botones en columna si hay poco espacio
+    gap: 12px;
   }
 }

@@ -25,6 +25,7 @@ export class TasksComponent implements OnInit {
     createdAt: new Date(),
     deleted: false,
   };
+  editingTask: Task | null = null;
   isLoading: boolean = true;
 
   constructor(
@@ -36,6 +37,7 @@ export class TasksComponent implements OnInit {
     this.loadTasks();
   }
 
+  /* Carga todas las tareas */
   loadTasks() {
     this.isLoading = true; // 🔹 Mostrar spinner mientras carga
     this.taskService.getTasks().subscribe({
@@ -50,6 +52,36 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  /* Seleccion de tarea para editar en el formulario */
+  editTask(task: Task) {
+    this.editingTask = { ...task }; // Clonamos la tarea para evitar mutaciones accidentales
+    this.newTask = { ...task };
+  }
+
+  async saveTask() {
+    if (!this.newTask.title.trim()) return;
+
+    if (this.editingTask) {
+      // Si estamos editando, hacer PUT
+      console.log(`Tarea ${this.editingTask?.id} actualizada`, { ...this.editingTask, ...this.newTask });
+      this.taskService.updateTask({ ...this.editingTask, ...this.newTask }).then(() => {
+        this.loadTasks();
+        this.resetForm();
+      }).catch(error => {
+        console.error("Error actualizando tarea:", error);
+      });
+    } else {
+      // Si no estamos editando, hacer POST
+      this.taskService.addTask(this.newTask).then(() => {
+        this.loadTasks();
+        this.resetForm();
+      }).catch(error => {
+        console.error("Error agregando tarea:", error);
+      });
+    }
+  }
+
+  /* Agregar una nueva tarea */
   async addTask() {
     if (!this.newTask.title.trim()) return;
 
@@ -75,6 +107,7 @@ export class TasksComponent implements OnInit {
     }
   }
 
+  /* Actualizar una tarea existente */
   async updateTask(task: Task) {
     if (!task.id) return;
 
@@ -94,6 +127,18 @@ export class TasksComponent implements OnInit {
     } catch (error) {
       console.error('Error eliminando tarea:', error);
     }
+  }
+
+  /* Resetea el formulario y el modo de edición */
+  resetForm() {
+    this.newTask = {
+      title: '',
+      description: '',
+      completed: false,
+      createdAt: new Date(),
+      deleted: false,
+    };
+    this.editingTask = null;
   }
 
   logout() {

@@ -1,13 +1,17 @@
 <div class="login-container">
   <mat-card class="login-card">
-    <mat-card-title>Iniciar Sesión</mat-card-title>
+    <mat-card-title>Iniciar sesión en ATOM Challenge</mat-card-title>
     <mat-card-content>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Correo Electrónico</mat-label>
-        <input matInput type="email" [(ngModel)]="email" name="email" required>
-      </mat-form-field>
+      <form (ngSubmit)="login()">
+        <mat-form-field appearance="outline">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput type="email" [(ngModel)]="email" name="email" required>
+        </mat-form-field>
 
-      <button mat-raised-button color="primary" class="full-width" (click)="login()">Ingresar</button>
+        <div class="login-actions">
+          <button mat-raised-button color="primary" type="submit">Ingresar</button>
+        </div>
+      </form>
     </mat-card-content>
   </mat-card>
 </div>
