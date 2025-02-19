@@ -62,6 +62,7 @@ firebase deploy --only hosting
 ```
 
 ## 📂 **Estructura del Proyecto**
+```plaintext
 src/
  ├── app/
  │   ├── guards/         # Protección de las rutas de la apliicación
