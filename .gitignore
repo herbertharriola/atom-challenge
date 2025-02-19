@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Debug Logs
+ui-debug.log
+database-debug.log
+firestore-debug.log

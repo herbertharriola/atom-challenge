@@ -1,36 +1,64 @@
-# ATOM FE CHALLENGE TEMPLATE - ANGULAR
+# 🚀 ATOM Challenge - Gestión de Tareas
 
-Este proyecto es una plantilla con lo necesario para comenzar a desarrollar el front-end de la aplicación de la prueba técnica de Atom. Se base en Angular con la versión 15.2.1.
-Se ha realizado la instalación y configuración de varias dependencias necesarias para el desarrollo de la aplicación, como por ejemplo: Angular Material.
+Este proyecto es una aplicación de gestión de tareas desarrollada con **Angular, Firebase Firestore y Firebase Hosting**. Permite agregar, editar, eliminar y marcar tareas como completadas.
 
-## Instrucciones
-Siéntete libre de clonar este repositorio y utilizarlo como base para el desarrollo de la aplicación. Sigue las indicates de la prueba técnica para completar la aplicación y desarrolla como más te sientas cómodo.
+---
 
-De igual manera puedes documentar dentro de este archivo todo lo que deseas contar sobre tu desarrollo, como por ejemplo, decisiones de diseño, problemas encontrados, etc.
+## 📌 Tecnologías Utilizadas
+- **Angular 15** → Framework frontend principal
+- **Firebase Firestore** → Base de datos en tiempo real
+- **Firebase Hosting** → Para el despliegue de la aplicación
+- **Material Angular** → Diseño de interfaz (Material UI)
+- **SCSS** → Estilos responsivos y personalizados
 
-## Comentarios sobre el desarrollo
-...
+---
 
-## Development server
+## ⚙️ Decisiones de Diseño y Desarrollo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### **1️⃣ Diseño Responsivo**
+- Se utilizó **Material Angular** para garantizar una interfaz moderna y responsiva.
+- Se aplicó `@media (max-width: 768px)` en SCSS para optimizar la vista en móviles.
 
-## Code scaffolding
+### **2️⃣ Persistencia de Datos**
+- Se usó **Firebase Firestore** como base de datos.
+- Cada tarea tiene los campos: `title`, `description`, `completed`, `createdAt`, `deleted`.
+- Implementamos eliminación **lógica** (`deleted: true` en vez de borrar datos).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### **3️⃣ Autenticación**
+- Se usa autenticación simple sin contraseña: solo ingresando el correo se valida en Firestore.
+- **No se usa Firebase Authentication**, sino Firestore como mecanismo de validación.
 
-## Build
+### **4️⃣ Funcionalidad Clave**
+- **Agregar tareas** con título, descripción y estado (`completed: false` por defecto).
+- **Editar tareas** → Cargar los datos en el formulario y cambiar el botón a *Guardar cambios*.
+- **Eliminar tareas** de forma lógica (`deleted: true` en Firestore).
+- **Persistencia** en Firebase Firestore con operaciones `POST`, `PUT`, `GET`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 🚀 **Cómo Ejecutar el Proyecto**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### **1️⃣ Instalar dependencias**:
+```sh
+npm install
 
-## Running end-to-end tests
+### **2️⃣ Correr el servidor de desarrollo**
+```sh
+ng serve
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### **3️⃣ Desplegar en Firebase Hosting**
+```sh
+ng build --configuration=production
+firebase deploy --only hosting
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 📂 **Estructura del Proyecto**
+src/
+ ├── app/
+ │   ├── guards/         # Protección de las rutas de la apliicación
+ │   ├── models/         # Modelos TypeScript (Interfaces)
+ │   ├── services/       # Servicios para Firebase (Firestore, Auth)
+ │   ├── pages/
+ │   │   ├── login/      # Pantalla de inicio de sesión
+ │   │   ├── tasks/      # Pantalla de gestión de tareas
+ ├── assets/             # Iconos, imágenes
+ ├── environments/       # Configuración de Firebase
