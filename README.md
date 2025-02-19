@@ -4,6 +4,13 @@ Este proyecto es una aplicación de gestión de tareas desarrollada con **Angula
 
 ---
 
+## 🚀 URL Para acceso al proyecto en Firebase Hosting
+```sh
+https://atom-challenge-backend.web.app/
+```
+
+---
+
 ## 📌 Tecnologías Utilizadas
 - **Angular 15** → Framework frontend principal
 - **Firebase Firestore** → Base de datos en tiempo real
@@ -41,15 +48,18 @@ Este proyecto es una aplicación de gestión de tareas desarrollada con **Angula
 ### **1️⃣ Instalar dependencias**:
 ```sh
 npm install
+```
 
 ### **2️⃣ Correr el servidor de desarrollo**
 ```sh
 ng serve
+```
 
 ### **3️⃣ Desplegar en Firebase Hosting**
 ```sh
 ng build --configuration=production
 firebase deploy --only hosting
+```
 
 ## 📂 **Estructura del Proyecto**
 src/
